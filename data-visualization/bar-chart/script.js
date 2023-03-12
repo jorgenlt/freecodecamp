@@ -40,16 +40,51 @@ let generateScales = () => {
 };
 
 let drawBars = () => {
+    let tooltip = d3.select('#barchart')
+                    .append('div')
+                    .attr('id', 'tooltip')
+                    .style('visibility', 'hidden')
+                    .style('width', 'auto')
+                    .style('height', 'auto')
 
+    svg.selectAll('rect')
+       .data(values)
+       .enter()
+       .append('rect')
+       .attr('class', 'bar')
+       .attr('width', (width - (2 * padding)) / values.length)
+       .attr('data-date', (item) => item[0])
+       .attr('data-gdp', (item) => item[1])
+       .attr('height', (item) => heightScale(item[1]))
+       .attr('x', (item, index) => xScale(index))
+       .attr('y', (item) => (height - padding) - heightScale(item[1]))
+       .on('mouseover', (event, item) => {
+            tooltip.transition()
+                   .style('visibility', 'visible');
+
+            tooltip.text(item[0])
+
+            document.querySelector('#tooltip').setAttribute('data-date', item[0])
+       })
+       .on('mouseout', (event, item) => {
+            tooltip.transition()
+                   .style('visibility', 'hidden');
+       })
 };
 
 let generateAxes = () => {
     let xAxis = d3.axisBottom(xAxisScale);
+    let yAxis = d3.axisLeft(yAxisScale);
 
     svg.append('g')
        .call(xAxis)
        .attr('id', 'x-axis')
-       .attr('transform', 'translate(0, ' + (height - padding) + ')')
+       .attr('transform', 'translate(0, ' + (height - padding) + ')');
+
+    svg.append('g')
+       .call(yAxis)
+       .attr('id', 'y-axis')
+       .attr('transform', 'translate(' + padding + ', 0)')
 };
 
 d3.json('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
