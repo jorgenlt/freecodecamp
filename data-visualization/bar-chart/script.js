@@ -28,7 +28,6 @@ let generateScales = () => {
                .range([padding, width - padding]);
 
     let datesArray = values.map((item) => new Date(item[0]));
-    console.log(datesArray);
 
     xAxisScale = d3.scaleTime()
                    .domain([d3.min(datesArray), d3.max(datesArray)])
@@ -44,8 +43,6 @@ let drawBars = () => {
                     .append('div')
                     .attr('id', 'tooltip')
                     .style('visibility', 'hidden')
-                    .style('width', 'auto')
-                    .style('height', 'auto')
 
     svg.selectAll('rect')
        .data(values)
@@ -60,16 +57,18 @@ let drawBars = () => {
        .attr('y', (item) => (height - padding) - heightScale(item[1]))
        .on('mouseover', (event, item) => {
             tooltip.transition()
-                   .style('visibility', 'visible');
+                   .style('visibility', 'visible')
+                   .style("top", (event.pageY) + "px")
+                   .style("left", (event.pageX) + "px")
 
-            tooltip.text(item[0])
+            tooltip.text(item[1] + ' Billions USD, ' + item[0])
 
             document.querySelector('#tooltip').setAttribute('data-date', item[0])
-       })
-       .on('mouseout', (event, item) => {
+            })
+        .on('mouseout', (event, item) => {
             tooltip.transition()
-                   .style('visibility', 'hidden');
-       })
+                    .style('visibility', 'hidden');
+        })
 };
 
 let generateAxes = () => {
@@ -90,7 +89,7 @@ let generateAxes = () => {
 d3.json('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
   .then(data => {
     values = data.data;
-    console.log(values);
+    // console.log(values);
     drawCanvas();
     generateScales();
     drawBars();
