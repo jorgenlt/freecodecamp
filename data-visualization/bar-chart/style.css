@@ -1,0 +1,10 @@
+#barchart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.canvas {
+    background-color: #f3f2f2;
+}
