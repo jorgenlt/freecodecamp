@@ -30,7 +30,7 @@ svg {
     padding: 20px;
 }
 
-#tooltip {
+/* #tooltip {
     background-color: #121416;
     position: absolute;
     max-width: 155px;
@@ -39,4 +39,19 @@ svg {
     opacity: 0.8;
     font-weight: 800;
     color: white;
+} */
+
+div.tooltip {
+    position: absolute;
+    padding: 10px;
+    font: 12px sans-serif;
+    background-color: #121416;
+    border: 0px;
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+#legend {
+    padding: 20px;
+    font-size: 14px;
 }
