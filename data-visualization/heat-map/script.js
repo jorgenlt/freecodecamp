@@ -88,8 +88,7 @@ const drawCells = () => {
             "November", 
             "December"
         ]
-    
-    // tooltip.text(item.year + ' ' + monthNames[item.month -1 ] + ' : ' + item.variance + ' °C')
+        
     tooltip.text(`${item.year} ${monthNames[item.month -1 ]}: ${item.variance} °C (${baseTemp + item.variance} °C)`)
     
     tooltip.attr('data-year', item.year)
