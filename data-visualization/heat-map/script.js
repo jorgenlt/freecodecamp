@@ -1,136 +1,129 @@
-const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json';
+const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
 
-const colorbrewer = {
-    RdYlBu: {
-        3: ['#fc8d59', '#ffffbf', '#91bfdb'],
-        4: ['#d7191c', '#fdae61', '#abd9e9', '#2c7bb6'],
-        5: ['#d7191c', '#fdae61', '#ffffbf', '#abd9e9', '#2c7bb6'],
-        6: ['#d73027', '#fc8d59', '#fee090', '#e0f3f8', '#91bfdb', '#4575b4'],
-        7: [
-            '#d73027',
-            '#fc8d59',
-            '#fee090',
-            '#ffffbf',
-            '#e0f3f8',
-            '#91bfdb',
-            '#4575b4'
-        ],
-        8: [
-            '#d73027',
-            '#f46d43',
-            '#fdae61',
-            '#fee090',
-            '#e0f3f8',
-            '#abd9e9',
-            '#74add1',
-            '#4575b4'
-        ],
-        9: [
-            '#d73027',
-            '#f46d43',
-            '#fdae61',
-            '#fee090',
-            '#ffffbf',
-            '#e0f3f8',
-            '#abd9e9',
-            '#74add1',
-            '#4575b4'
-        ],
-        10: [
-            '#a50026',
-            '#d73027',
-            '#f46d43',
-            '#fdae61',
-            '#fee090',
-            '#e0f3f8',
-            '#abd9e9',
-            '#74add1',
-            '#4575b4',
-            '#313695'
-        ],
-        11: [
-            '#a50026',
-            '#d73027',
-            '#f46d43',
-            '#fdae61',
-            '#fee090',
-            '#ffffbf',
-            '#e0f3f8',
-            '#abd9e9',
-            '#74add1',
-            '#4575b4',
-            '#313695'
-        ]
-    },
-    RdBu: {
-        3: ['#ef8a62', '#f7f7f7', '#67a9cf'],
-        4: ['#ca0020', '#f4a582', '#92c5de', '#0571b0'],
-        5: ['#ca0020', '#f4a582', '#f7f7f7', '#92c5de', '#0571b0'],
-        6: ['#b2182b', '#ef8a62', '#fddbc7', '#d1e5f0', '#67a9cf', '#2166ac'],
-        7: [
-            '#b2182b',
-            '#ef8a62',
-            '#fddbc7',
-            '#f7f7f7',
-            '#d1e5f0',
-            '#67a9cf',
-            '#2166ac'
-        ],
-        8: [
-            '#b2182b',
-            '#d6604d',
-            '#f4a582',
-            '#fddbc7',
-            '#d1e5f0',
-            '#92c5de',
-            '#4393c3',
-            '#2166ac'
-        ],
-        9: [
-            '#b2182b',
-            '#d6604d',
-            '#f4a582',
-            '#fddbc7',
-            '#f7f7f7',
-            '#d1e5f0',
-            '#92c5de',
-            '#4393c3',
-            '#2166ac'
-        ],
-        10: [
-            '#67001f',
-            '#b2182b',
-            '#d6604d',
-            '#f4a582',
-            '#fddbc7',
-            '#d1e5f0',
-            '#92c5de',
-            '#4393c3',
-            '#2166ac',
-            '#053061'
-        ],
-        11: [
-            '#67001f',
-            '#b2182b',
-            '#d6604d',
-            '#f4a582',
-            '#fddbc7',
-            '#f7f7f7',
-            '#d1e5f0',
-            '#92c5de',
-            '#4393c3',
-            '#2166ac',
-            '#053061'
-        ]
-    }
+let baseTemp
+let values = [];
+
+let xScale
+let yScale
+
+let xAxis
+let yAxis
+
+const width = 1200;
+const height = 600;
+const padding = 60;
+
+const svg = d3.select('svg');
+const tooltip = d3.select('#tooltip');
+
+const generateScales = () => {    
+    const minYear = d3.min(values, item => item.year);
+    
+    const maxYear = d3.max(values, item => item.year);
+    
+    xScale = d3.scaleLinear()
+    .domain([minYear, maxYear + 1])
+    .range([padding, width - padding]);
+    
+    yScale = d3.scaleTime()
+    .domain([new Date(0,0,0,0, 0, 0, 0), new Date(0,12,0,0,0,0,0)])
+    .range([padding, height - padding]);
 };
 
-const width = ;
-const height = ;
-const padding = 40;
+const drawCanvas = () => {
+    svg.attr('width', width)
+    svg.attr('height', height)
+};
 
-// x-axis
-const xScale = d3.scaleBand()
-                .domain(data.monthlyVariance.map( val => val.year))
-                .range([0, width])
-                .padding(0);
+const drawCells = () => {
+    svg.selectAll('rect')
+    .data(values)
+    .enter()
+    .append('rect')
+    .attr('class','cell')
+    .attr('fill', (item) => {
+        const variance = item.variance
+        if(variance <= -1){
+            return 'darkblue'
+        }else if(variance <= 0){
+            return 'lightblue'
+        }else if(variance <= 1){
+            return 'orange'
+        }else{
+            return 'darkred'
+        }
+    })
+    .attr('data-year', item => item.year)
+    .attr('data-month', item => item.month - 1)
+    .attr('data-temp', item => baseTemp + item.variance)
+    .attr('height', item => (height - (2 * padding)) / 12)
+    .attr('y', item => yScale(new Date(0, item['month']-1, 0, 0, 0, 0, 0)))
+    .attr('width', (item) => {
+        const minYear = d3.min(values, item => item.year)
+        
+        const maxYear = d3.max(values, item => item.year)
+        
+        const yearCount = maxYear - minYear
+        
+        return (width - (2 * padding)) / yearCount
+    })
+    .attr('x', item => xScale(item.year))
+    .on('mouseover', (event, item) => {
+        tooltip.transition()
+        .style('visibility', 'visible')
+        .style('left', event.pageX + 'px')
+        .style('top', event.pageY - 10 + 'px')
+        
+        const monthNames = [
+            "January", 
+            "February", 
+            "March", 
+            "April", 
+            "May", 
+            "June",
+            "July", 
+            "August", 
+            "September", 
+            "October", 
+            "November", 
+            "December"
+        ]
+    
+    // tooltip.text(item.year + ' ' + monthNames[item.month -1 ] + ' : ' + item.variance + ' °C')
+    tooltip.text(`${item.year} ${monthNames[item.month -1 ]}: ${item.variance} °C (${baseTemp + item.variance} °C)`)
+    
+    tooltip.attr('data-year', item.year)
+    })
+    .on('mouseout', (event, item) => {
+        tooltip.transition()
+        .style('visibility', 'hidden')
+    });
+};
+
+const generateAxes = () => {
+    const xAxis = d3.axisBottom(xScale)
+    .tickFormat(d3.format('d'));
+    
+    const yAxis = d3.axisLeft(yScale)
+    .tickFormat(d3.timeFormat('%B'));
+    
+    svg.append('g')
+    .call(xAxis)
+    .attr('id','x-axis')
+    .attr('transform', 'translate(0, ' + (height-padding) + ')');
+    
+    svg.append('g')
+    .call(yAxis)
+    .attr('id', 'y-axis')
+    .attr('transform', 'translate(' + padding + ', 0)');
+};
+
+d3.json(url)
+.then(data => {
+    baseTemp = data.baseTemperature;
+    values = data.monthlyVariance;
+    drawCanvas();
+    generateScales();
+    drawCells();
+    generateAxes();
+});

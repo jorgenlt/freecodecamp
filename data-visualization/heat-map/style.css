@@ -5,16 +5,13 @@ body {
     color: white;
 }
 
-svg {
-    fill: #a5ff8e;
-}
-
-#scatterplot-graph {
+#heat-map {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family: 'Roboto', sans-serif;
+    color: white;
 }
 
 #title {
@@ -22,31 +19,37 @@ svg {
 }
 
 #description {
-    margin: 5px 0px 40px 0px;
+    margin: 5px 0px 0px 0px;
 }
 
 .canvas {
     background-color: #1d2022;
     padding: 20px;
+    min-height: 600px;
+    min-width: 1200px;
 }
 
-/* #tooltip {
-    background-color: #121416;
-    position: absolute;
-    max-width: 155px;
-    border-radius: 5px;
-    padding: 10px;
-    opacity: 0.8;
-    font-weight: 800;
-    color: white;
-} */
+.cell:hover {
+    fill: #1d2022;
+}
 
-div.tooltip {
+#tooltip {
+    opacity: 0.9;
     position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
     padding: 10px;
     font: 12px sans-serif;
     background-color: #121416;
     border: 0px;
     border-radius: 5px;
     pointer-events: none;
+}
+
+#legend {
+    color: rgb(56, 58, 74);
+    font-size: 14px;
+    text-align: center;
+    min-height: 150px;
 }

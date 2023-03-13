@@ -11,10 +11,29 @@
         <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
     </head>
     <body>
-        <div id="scatterplot-graph">
+        <div id="heat-map">
             <h1 id="title">Monthly Global Land-Surface Temperature</h1>
             <h2 id="description">1753 - 2015: base temperature 8.66℃</h2>
-            <svg class="canvas"></svg>
+            <div id='tooltip'></div>
+            <svg id='canvas'></svg>
+            <svg id='legend'>
+                <g>
+                    <rect x="10" y="0" width="5" height="40" fill="darkblue"></rect>
+                    <text x="60" y="20" fill="white">Variance of -1 or less</text>
+                </g>
+                <g>
+                    <rect x="10" y="40" width="5" height="40" fill="lightblue"></rect>
+                    <text x="60" y="60" fill="white">On or Below Average</text>
+                </g>
+                <g>
+                    <rect x="10" y="80" width="5" height="40" fill="orange"></rect>
+                    <text x="60" y="100" fill="white">Above Average</text>
+                </g>
+                <g>
+                    <rect x="10" y="120" width="5" height="40" fill="darkred"></rect>
+                    <text x="60" y="140" fill="white">Variance of +1 or more</text>
+                </g>
+            </svg>
         </div>
     </body>
     <script src="./script.js"></script>
