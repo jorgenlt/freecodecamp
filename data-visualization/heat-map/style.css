@@ -21,7 +21,7 @@ svg {
     margin: 50px 0px 5px 0px;
 }
 
-#subtitle {
+#description {
     margin: 5px 0px 40px 0px;
 }
 
@@ -49,9 +49,4 @@ div.tooltip {
     border: 0px;
     border-radius: 5px;
     pointer-events: none;
-}
-
-#legend {
-    padding: 20px;
-    font-size: 14px;
 }

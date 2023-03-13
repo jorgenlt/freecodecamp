@@ -1,96 +1,136 @@
-const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
+const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json';
 
-const width = 800;
-const height = 600;
+const colorbrewer = {
+    RdYlBu: {
+        3: ['#fc8d59', '#ffffbf', '#91bfdb'],
+        4: ['#d7191c', '#fdae61', '#abd9e9', '#2c7bb6'],
+        5: ['#d7191c', '#fdae61', '#ffffbf', '#abd9e9', '#2c7bb6'],
+        6: ['#d73027', '#fc8d59', '#fee090', '#e0f3f8', '#91bfdb', '#4575b4'],
+        7: [
+            '#d73027',
+            '#fc8d59',
+            '#fee090',
+            '#ffffbf',
+            '#e0f3f8',
+            '#91bfdb',
+            '#4575b4'
+        ],
+        8: [
+            '#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee090',
+            '#e0f3f8',
+            '#abd9e9',
+            '#74add1',
+            '#4575b4'
+        ],
+        9: [
+            '#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee090',
+            '#ffffbf',
+            '#e0f3f8',
+            '#abd9e9',
+            '#74add1',
+            '#4575b4'
+        ],
+        10: [
+            '#a50026',
+            '#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee090',
+            '#e0f3f8',
+            '#abd9e9',
+            '#74add1',
+            '#4575b4',
+            '#313695'
+        ],
+        11: [
+            '#a50026',
+            '#d73027',
+            '#f46d43',
+            '#fdae61',
+            '#fee090',
+            '#ffffbf',
+            '#e0f3f8',
+            '#abd9e9',
+            '#74add1',
+            '#4575b4',
+            '#313695'
+        ]
+    },
+    RdBu: {
+        3: ['#ef8a62', '#f7f7f7', '#67a9cf'],
+        4: ['#ca0020', '#f4a582', '#92c5de', '#0571b0'],
+        5: ['#ca0020', '#f4a582', '#f7f7f7', '#92c5de', '#0571b0'],
+        6: ['#b2182b', '#ef8a62', '#fddbc7', '#d1e5f0', '#67a9cf', '#2166ac'],
+        7: [
+            '#b2182b',
+            '#ef8a62',
+            '#fddbc7',
+            '#f7f7f7',
+            '#d1e5f0',
+            '#67a9cf',
+            '#2166ac'
+        ],
+        8: [
+            '#b2182b',
+            '#d6604d',
+            '#f4a582',
+            '#fddbc7',
+            '#d1e5f0',
+            '#92c5de',
+            '#4393c3',
+            '#2166ac'
+        ],
+        9: [
+            '#b2182b',
+            '#d6604d',
+            '#f4a582',
+            '#fddbc7',
+            '#f7f7f7',
+            '#d1e5f0',
+            '#92c5de',
+            '#4393c3',
+            '#2166ac'
+        ],
+        10: [
+            '#67001f',
+            '#b2182b',
+            '#d6604d',
+            '#f4a582',
+            '#fddbc7',
+            '#d1e5f0',
+            '#92c5de',
+            '#4393c3',
+            '#2166ac',
+            '#053061'
+        ],
+        11: [
+            '#67001f',
+            '#b2182b',
+            '#d6604d',
+            '#f4a582',
+            '#fddbc7',
+            '#f7f7f7',
+            '#d1e5f0',
+            '#92c5de',
+            '#4393c3',
+            '#2166ac',
+            '#053061'
+        ]
+    }
+};
+
+const width = ;
+const height = ;
 const padding = 40;
 
-let values = [];
-let xScale
-let yScale
-
-
-const svg = d3.select('svg')
-
-const drawCanvas = () => {
-    svg.attr('width', width);
-    svg.attr('height', height);
-};
-
-let generateScales = () => {
-    xScale = d3.scaleLinear()
-                .domain([d3.min(values, item => item.Year - 1), d3.max(values, item => item.Year + 2)])
-                .range([padding, width - padding]);
-
-    yScale = d3.scaleTime()
-                .domain([d3.min(values, item => new Date((item.Seconds) * 1000 - 10000)), d3.max(values, item => new Date(item.Seconds * 1000 + 10000))])
-                .range([padding ,height - padding])
-
-};
-
-let drawPoints = () => {
-    svg.selectAll('circle')
-        .data(values)
-        .enter()
-        .append('circle')
-        .attr('class', 'dot')
-        .attr('r', 5)
-        .attr('data-xvalue', (item) => item.Year)
-        .attr('data-yvalue', (item) => new Date(item.Seconds * 1000))
-        .attr('cx', item => xScale(item.Year))
-        .attr('cy', item => yScale(new Date(item.Seconds * 1000)))
-        .attr('fill', item => item.Doping != "" ? 'darkred' : 'darkgreen')
-        .on('mouseover', (event, item) => {
-            tooltip.style('opacity', 0.9)
-                    .attr('data-year', item.Year)
-                    .style('left', event.pageX + 'px')
-                    .style('top', event.pageY - 10 + 'px')
-                    .html(
-                        item.Name +
-                        ': ' +
-                        item.Nationality +
-                        '<br/>' +
-                        'Year: ' +
-                        item.Year +
-                        ', Time: ' +
-                        item.Time +
-                        (item.Doping ? '<br/><br/>' + item.Doping : '')
-                    )
-        })
-        .on('mouseout', function() {
-            tooltip.style('opacity', 0);
-        });
-};
-
-let generateAxes = () => {
-    let xAxis = d3.axisBottom(xScale)
-                    .tickFormat(d3.format('d'));
-
-    let yAxis = d3.axisLeft(yScale)
-                    .tickFormat(d3.timeFormat('%M:%S'))
-
-    svg.append('g')
-       .call(xAxis)
-       .attr('id', 'x-axis')
-       .attr('transform', 'translate(0, ' + (height - padding) + ')');
-
-    svg.append('g')
-       .call(yAxis)
-       .attr('id', 'y-axis')
-       .attr('transform', 'translate(' + padding + ', 0)')
-};
-
-let tooltip = d3.select('#scatterplot-graph')
-                .append('div')
-                .attr('class', 'tooltip')
-                .attr('id', 'tooltip')
-                .style('opacity', 0);
-
-d3.json(url)
-  .then(data => {
-    values = data
-     
-    drawCanvas();
-    generateScales();
-    drawPoints();
-    generateAxes();
-});
+// x-axis
+const xScale = d3.scaleBand()
+                .domain(data.monthlyVariance.map( val => val.year))
+                .range([0, width])
+                .padding(0);
