@@ -50,3 +50,8 @@ div.tooltip {
     border-radius: 5px;
     pointer-events: none;
 }
+
+#legend {
+    padding: 20px;
+    font-size: 14px;
+}
