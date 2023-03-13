@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+    background-color: #121416;
+    color: white;
+}
+
+svg {
+    fill: #a5ff8e;
+}
+
+#scatterplot-graph {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+#title {
+    margin: 50px 0px 5px 0px;
+}
+
+#subtitle {
+    margin: 5px 0px 40px 0px;
+}
+
+.canvas {
+    background-color: #1d2022;
+    padding: 20px;
+}
+
+#tooltip {
+    background-color: #121416;
+    position: absolute;
+    max-width: 155px;
+    border-radius: 5px;
+    padding: 10px;
+    opacity: 0.8;
+    font-weight: 800;
+    color: white;
+}
