@@ -3,16 +3,17 @@
 body {
     background-color: #121416;
     color: white;
-    height: 100%;
+    min-height: 100%;
 }
 
-#choropleth-map {
+#treemap {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family: 'Roboto', sans-serif;
     color: white;
+    font-size: 12px;
 }
 
 #title {
@@ -23,26 +24,32 @@ body {
     margin: 5px 0px 30px 0px;
 }
 
-#canvas {
-
-    padding: 20px;
-    min-height: 600px;
-    min-width: 960px;
+svg {
+    font: 10px sans-serif;
+    text-align: center;
+    display: block;
+    margin: auto;
 }
 
-.county:hover {
+#canvas {
+    padding: 20px;
+    min-height: 600px;
+    min-width: 1000px;
+}
+
+.tile:hover {
     opacity: 0.6;
 }
 
 #tooltip {
-    opacity: 0.9;
+    opacity: 0.8;
     position: absolute;
     visibility: hidden;
     height: auto;
     width: auto;
     padding: 10px;
     font: 12px sans-serif;
-    background-color: #121416;
+    background-color: #24272b;
     border: 0px;
     border-radius: 5px;
     pointer-events: none;
@@ -52,6 +59,15 @@ body {
     color: rgb(56, 58, 74);
     font-size: 12px;
     text-align: center;
-    min-height: 150px;
-    padding: 20px;
+    min-height: 300px;
+    width: 130px;
+    padding: 0px;
+}
+
+#tooltip > p {
+    margin: 5px;
+}
+
+.flex {
+    display: flex;
 }
