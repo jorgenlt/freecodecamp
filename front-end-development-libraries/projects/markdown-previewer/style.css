@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Roboto&family=VT323&display=swap');
-/* font-family: 'IBM Plex Mono', monospace;
-font-family: 'Roboto', sans-serif;
-font-family: 'VT323', monospace; */
 
 :root {
     --white: #cfcfcf;
@@ -39,6 +36,10 @@ h1, h2, h3 {
     justify-content: center;
 }
 
+#editor {
+    padding: 10px;
+}
+
 textarea {
     background-color: var(--black) !important;
     width: 100%;
@@ -71,8 +72,16 @@ textarea {
 #preview {
     min-height: 200px;
     background-color: var(--black);
+    font-family: 'Roboto', sans-serif;
+    padding: 10px;
 }
 
 #preview-container {
     border: 2px solid var(--white);
+    margin-bottom: 100px;
+}
+
+code {
+    background-color: black;
+    padding: 5px;
 }
