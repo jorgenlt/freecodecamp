@@ -6,14 +6,17 @@
     --faded-green: #ceffc2ff;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Roboto&family=VT323&display=swap');
-
 body {
     background-color: var(--black);
     color: var(--white);
     font-family: 'VT323', monospace;
+}
 
-
+#buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
 }
 
 .btn {
@@ -29,15 +32,24 @@ body {
 .btn-primary {
     background: var(--lightgreen);
     border: 1px solid var(--lightgreen);
+    font-size: 20px;
 }
 
 #drum-machine {
-    width: 560px;
+    width: 290px;
     background-color: var(--black);
 }
 
 #drum-machine h1 {
-    font-family: 'VT323', monospace;
+    font-size: 50px;
+}
+
+.drum-pad {
+    font-size: 30px;
+}
+
+#display {
+    font-size: 30px;
 }
 
 .change-bg {
