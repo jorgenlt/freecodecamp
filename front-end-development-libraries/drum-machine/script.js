@@ -60,15 +60,15 @@ const App = () => {
         <div className="container d-flex justify-content-center align-items-center vh-100">
             <div id="drum-machine" className="drum-wrapper d-flex justify-content-center flex-column p-2">
                 <h1 className="text-center">Drum Machine</h1>
-                <div>
+                <div id="buttons">
                     {audio.map(clip => (
                         <Pad key={clip.id} clip={clip} />
                     ))}
                 </div>
-                <div id="display" className="text-center"></div>
+                <div id="display" className="text-center">[ ]</div>
             </div>
         </div>
-        );
+    );
 };
     
 const Pad = ({clip}) => {
@@ -92,12 +92,13 @@ const Pad = ({clip}) => {
         tag.play();
         tag.parentNode.classList.add('change-bg');
         setTimeout(() => tag.parentNode.classList.remove('change-bg'), 200);
+
         const display = document.querySelector('#display');
-        display.innerHTML = clip.id;
+        display.innerHTML = `[ ${clip.id} ]`;
     };
 
     return (
-        <div id={clip.id} onClick={playSound} className="drum-pad btn btn-primary p-3 m-2">
+        <div id={clip.id} onClick={playSound} className="drum-pad btn btn-primary m-2">
             <audio className="clip" id={clip.keyTrigger} src={clip.url} />
             {clip.keyTrigger}
         </div>
