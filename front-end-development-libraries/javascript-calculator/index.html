@@ -36,8 +36,375 @@
             <div class="padButton" id="zero">0</div>
             <div class="padButton" id="decimal">.</div>
         </div>
+        <div id="source-code">
+            <div class="code-container">
+                <pre>
+                    <code class="language-javascript">
+
+// front-end-development-libraries/javascript-calculator/script.js
+
+// variables
+let input;
+
+let expression = '';
+let setExpression;
+let answer;
+let setAnswer;
+
+let expressionSplitByOperator;
+let lastItemInExpression;
+let splitExpression = '';
+let splitExpressionLast;
+
+//regex
+const regexDecimal = /[.]/g;
+const regexOperators = /[-+/*]/g;
+const regexOperatorsNoMinus = /[+/*]/g;
+const regexOperatorsNoMinusNoPlus = /[/*]/g;
+
+//elements
+const display = document.querySelector('#display');
+const allClearButton = document.querySelector('#clear');
+const clearButton = document.querySelector('#all-clear');
+
+const divideButton = document.querySelector('#divide');
+const multiplyButton = document.querySelector('#multiply');
+const subtractButton = document.querySelector('#subtract');
+const addButton = document.querySelector('#add');
+const equalsButton = document.querySelector('#equals');
+const decimalButton = document.querySelector('#decimal');
+
+const oneButton = document.querySelector('#one');
+const twoButton = document.querySelector('#two');
+const threeButton = document.querySelector('#three');
+const fourButton = document.querySelector('#four');
+const fiveButton = document.querySelector('#five');
+const sixButton = document.querySelector('#six');
+const sevenButton = document.querySelector('#seven');
+const eightButton = document.querySelector('#eight');
+const nineButton = document.querySelector('#nine');
+const zeroButton = document.querySelector('#zero');
+
+// functions
+const allClear = (element) => {
+    element.innerHTML = '0';
+};
+
+const clear = (element) => {
+    element.innerHTML = removeLastInString(element);
+};
+
+const removeLastInString = (element) => {
+    return element.innerHTML.substring(0, element.innerHTML.length - 1);
+};
+
+const updateDisplay = (symbol) => {
+    expression = display.innerHTML;
+
+    expressionSplitByOperator = expression.split(regexOperators);
+    lastItemInExpression = expressionSplitByOperator[expressionSplitByOperator.length - 1];
+    splitExpression = expression.split('');
+    splitExpressionLast = splitExpression[splitExpression.length - 1];
+
+    console.log(`symbol is: ${symbol}`);
+    console.log(`lastItemInExpression is: ${lastItemInExpression}`);
+    console.log(`regexDecimal.test(lastItemInExpression) is: ${regexDecimal.test(lastItemInExpression)}`);
+    console.log(`splitExpressionLast is: ${splitExpressionLast}`);
+    console.log(`expression is: ${expression}`);
+    console.log(`expressionSplitByOperator is ${expressionSplitByOperator}`);
+    console.log(`splitExpression is: ${splitExpression}`);
+    console.log(`splitExpression[splitExpression.length - 1] is: ${splitExpression[splitExpression.length - 1]}`);
+    console.log(`splitExpression[splitExpression.length] is: ${splitExpression[splitExpression.length - 2]}`);
+    console.log(`typeof splitExpression is ${typeof splitExpression}`);
+    console.log(`typeof splitExpression[splitExpression.length - 1] is ${typeof splitExpression[splitExpression.length - 1]}`);
+    console.log('---------------------------------');
+
+    if(display.innerHTML == '0') {
+        display.innerHTML = '';
+    };
+
+    if(symbol == '.' && lastItemInExpression.includes('.')) {
+        display.innerHTML = display.innerHTML;
+    } else if(splitExpressionLast == '-' && symbol.search(regexOperatorsNoMinusNoPlus) != -1) {
+        display.innerHTML = removeLastInString(display) + symbol;
+    } else if(symbol == '+' && splitExpressionLast == '-') {
+        display.innerHTML = removeLastInString(display) + symbol;
+    } else if(symbol == '-' && splitExpressionLast != '-') {
+        display.innerHTML = display.innerHTML + symbol;
+    } else if(splitExpressionLast == '-' && symbol != '-') {
+        display.innerHTML = display.innerHTML + symbol;
+    } else if(symbol.search(regexOperators) != -1 && splitExpressionLast.search(regexOperators) != -1) {
+        display.innerHTML = removeLastInString(display) + symbol;
+    } else {
+        display.innerHTML = display.innerHTML + symbol;
+    };
+
+    if (typeof splitExpression[splitExpression.length -2] == 'string') {
+        if(
+        splitExpression[splitExpression.length - 2].search(regexOperators) != -1 && 
+        splitExpression[splitExpression.length - 1].search(regexOperators) != -1 && 
+        symbol.search(regexOperators) != -1) {
+            display.innerHTML = expression.slice(0, -2) + symbol;
+        };
+    };
+};
+
+const calculate = () => {
+    display.innerHTML = math.evaluate(display.innerHTML);
+};
+
+//actions
+allClearButton.addEventListener('click', (event) => {
+    allClear(display);
+});
+
+clearButton.addEventListener('click', (event) => {
+    clear(display);
+});
+
+divideButton.addEventListener('click', (event) => {
+    updateDisplay('/');
+});
+
+multiplyButton.addEventListener('click', (event) => {
+    updateDisplay('*');
+});
+
+subtractButton.addEventListener('click', (event) => {
+    updateDisplay('-');
+});
+
+addButton.addEventListener('click', (event) => {
+    updateDisplay('+');
+});
+
+equalsButton.addEventListener('click', (event) => {
+    calculate();
+});
+
+decimalButton.addEventListener('click', (event) => {
+    updateDisplay('.');
+});
+
+
+// event listeners
+oneButton.addEventListener('click', event => updateDisplay('1'));
+twoButton.addEventListener('click', event => updateDisplay('2'));
+threeButton.addEventListener('click', event => updateDisplay('3'));
+fourButton.addEventListener('click', event => updateDisplay('4'));
+fiveButton.addEventListener('click', event => updateDisplay('5'));
+sixButton.addEventListener('click', event => updateDisplay('6'));
+sevenButton.addEventListener('click', event => updateDisplay('7'));
+eightButton.addEventListener('click', event => updateDisplay('8'));
+nineButton.addEventListener('click', event => updateDisplay('9'));
+zeroButton.addEventListener('click', event => updateDisplay('0'));
+
+document.addEventListener("keypress", (event) => {
+    // console.log("Key pressed: " + event.key);
+    const key = event.key; 
+
+    if(key == '/') {updateDisplay('/')};
+    if(key == '*') {updateDisplay('*')};
+    if(key == '-') {updateDisplay('-')};
+    if(key == '+') {updateDisplay('+')};
+    if(key == 'Enter') {calculate()};
+    if(key == '.') {updateDisplay('.')};
+    if(key == 1) {updateDisplay('1')};
+    if(key == 2) {updateDisplay('2')};
+    if(key == 3) {updateDisplay('3')};
+    if(key == 4) {updateDisplay('4')};
+    if(key == 5) {updateDisplay('5')};
+    if(key == 6) {updateDisplay('6')};
+    if(key == 7) {updateDisplay('7')};
+    if(key == 8) {updateDisplay('8')};
+    if(key == 9) {updateDisplay('9')};
+    if(key == 0) {updateDisplay('0')};
+});
+
+
+
+                    </code>
+                </pre>
+            </div>
+            <div class="code-container">
+                <pre>
+                    <code class="language-javascript">
+
+&lt;!-- front-end-development-libraries/javascript-calculator/index.html -->
+
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.js" integrity="sha512-jVMFsAksn8aljb9IJ+3OCAq38dJpquMBjgEuz7Q5Oqu5xenfin/jxdbKw4P5eKjUF4xiG/GPT5CvCX3Io54gyA==" crossorigin="anonymous" referrerpolicy="no-referrer">&lt;/script>
+    &lt;link rel="stylesheet" href="./style.css">
+    &lt;link rel="preconnect" href="https://fonts.googleapis.com">
+    &lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    &lt;link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    &lt;title>Javascript Calculator&lt;/title>
+&lt;/head>
+&lt;body>
+    &lt;div class="container">
+        &lt;div class="grid">
+            &lt;div class="padButton" id="display-box">
+                &lt;div id="display">0&lt;/div>
+            &lt;/div>
+            &lt;div class="padButton" id="clear">AC&lt;/div>
+            &lt;div class="padButton" id="all-clear">C&lt;/div>
+            &lt;div class="padButton" id="divide">/&lt;/div>
+            &lt;div class="padButton" id="multiply">x&lt;/div>
+            &lt;div class="padButton" id="seven">7&lt;/div>
+            &lt;div class="padButton" id="eight">8&lt;/div>
+            &lt;div class="padButton" id="nine">9&lt;/div>
+            &lt;div class="padButton" id="subtract">-&lt;/div>
+            &lt;div class="padButton" id="four">4&lt;/div>
+            &lt;div class="padButton" id="five">5&lt;/div>
+            &lt;div class="padButton" id="six">6&lt;/div>
+            &lt;div class="padButton" id="add">+&lt;/div>
+            &lt;div class="padButton" id="one">1&lt;/div>
+            &lt;div class="padButton" id="two">2&lt;/div>
+            &lt;div class="padButton" id="three">3&lt;/div>
+            &lt;div class="padButton" id="equals">=&lt;/div>
+            &lt;div class="padButton" id="zero">0&lt;/div>
+            &lt;div class="padButton" id="decimal">.&lt;/div>
+        &lt;/div>
+    &lt;/div>
+    &lt;script src="./script.js">&lt;/script>
+&lt;/body>
+&lt;script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js">&lt;/script>
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js" integrity="sha512-UOoJElONeUNzQbbKQbjldDf9MwOHqxNz49NNJJ1d90yp+X9edsHyJoAs6O4K19CZGaIdjI5ohK+O2y5lBTW6uQ==" crossorigin="anonymous" referrerpolicy="no-referrer">&lt;/script>
+&lt;/html>
+                    </code>
+                </pre>
+            </div>
+            <div class="code-container">
+                <pre>
+                    <code class="language-css">
+
+/* front-end-development-libraries/javascript-calculator/style.css */
+
+:root {
+    --black:            #121416ff;
+    --lighterblack:     rgb(34, 38, 42);
+    --gray:             rgb(101, 102, 107);
+    --lightgreen:       #a5ff8eff;
+    --white:            #f5f5f5ff;
+    --faded-green:      #ceffc2ff;
+    --red:              rgb(141, 48, 48);
+    --blue:             rgb(65, 88, 170);
+}
+
+body {
+    background-color: var(--black);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    width: 360px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+        "display display display display"
+        "all-clear clear divide multiply"
+        "seven eight nine subtract"
+        "four five six add"
+        "one two three equals"
+        "zero zero decimal equals"
+    ;
+}
+
+.padButton {
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 30px;
+    border: 1px solid var(--black);
+    cursor: pointer;
+}
+
+.padButton:hover {
+    filter: brightness(150%);
+}
+
+#display-box {
+    grid-area: display;
+    background-color: var(--lighterblack);
+    padding: 0px;
+    height: 90px;
+}
+
+#display {
+    height: 100%;
+    width: 100%;
+    font-size: 40px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+#one, #two, #three, #four, #five, #six, #seven, #eight, #nine, #zero, #decimal {
+    background-color: var(--lighterblack);
+}
+
+#all-clear, #clear {
+    background-color: var(--red);
+}
+
+#divide, #multiply, #subtract, #add {
+    background-color: var(--gray);
+}
+
+#equals {
+    background-color: var(--blue);
+}
+
+#zero {
+    grid-area: zero;
+}
+
+#equals {
+    grid-area: equals;
+}
+
+#source-code {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+.code-container {
+    overflow: scroll;
+    border: 1px solid var(--white);
+    width: 800px;
+    height: 800px;
+    margin: 20px;
+}
+
+/* prism */
+/* PrismJS 1.29.0
+https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clike+javascript+ruby+sass+scss */
+code[class*=language-],pre[class*=language-]{color:#f8f8f2;background:0 0;text-shadow:0 1px rgba(0,0,0,.3);font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:14px;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto;border-radius:.3em}:not(pre)>code[class*=language-],pre[class*=language-]{background:#121416}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#8292a2}.token.punctuation{color:#f8f8f2}.token.namespace{opacity:.7}.token.constant,.token.deleted,.token.property,.token.symbol,.token.tag{color:#f92672}.token.boolean,.token.number{color:#ae81ff}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#a6e22e}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url,.token.variable{color:#f8f8f2}.token.atrule,.token.attr-value,.token.class-name,.token.function{color:#e6db74}.token.keyword{color:#66d9ef}.token.important,.token.regex{color:#fd971f}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}
+                    </code>
+                </pre>
+            </div>
+        </div>
     </div>
     <script src="./script.js"></script>
 </body>
 <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js" integrity="sha512-UOoJElONeUNzQbbKQbjldDf9MwOHqxNz49NNJJ1d90yp+X9edsHyJoAs6O4K19CZGaIdjI5ohK+O2y5lBTW6uQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </html>
