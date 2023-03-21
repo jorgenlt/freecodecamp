@@ -48,27 +48,30 @@ body {
     cursor: pointer;
 }
 
-#display {
+.padButton:hover {
+    filter: brightness(150%);
+}
+
+#display-box {
     grid-area: display;
     background-color: var(--lighterblack);
     text-align: right;
     font-size: 30px;
     padding: 0px;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90px;
 }
 
-#display input {
-    color: var(--white);
-    background: none;
-    width: 350px;
+.expression {
+    width: 100%;
     padding-right: 20px;
-    height: 100%;
-    text-align: right;
-    font-size: 40px;
-    border: 0;
 }
 
-::placeholder {
-    color: var(--white);
+.answer {
+    width: 100%;
+    font-size: 40px;
+    padding-right: 20px;
 }
 
 #one, #two, #three, #four, #five, #six, #seven, #eight, #nine, #zero, #decimal {
