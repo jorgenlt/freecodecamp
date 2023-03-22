@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <title>25 + 5 Clock</title>
+</head>
+<body>
+    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
+        <h1 id="title" class="mb-0 fs-2">25 + 5 Clock</h1>
+        <div id="timer-wrapper" class="mt-4 mb-4 p-4">
+            <p id="timer-label" class="fs-3 mb-3">Session</p>
+            <div id="timer d-flex justify-content-center">
+                <span class="d-flex w-100 justify-content-center fs-1" id="time-left">25:00</span>
+                <div class="d-flex justify-content-center">
+                    <div id="start_stop" class="mt-3">
+                        <i class="fa-sharp fa-regular fa-circle-play"></i>
+                        <i class="fa-sharp fa-regular fa-circle-pause"></i>
+                        <span id="reset">
+                            <i class="fa-sharp fa-regular fa-circle-stop"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-5">
+            <div class="length d-flex flex-column align-items-center">
+                <p id="break-label" class="mb-0">Break length</p>
+                <div>
+                    <span id="break-decrement"><i class="fa-solid fa-arrow-up"></i></span>
+                    <span id="break-length" class="fs-4">5</span>
+                    <span id="break-increment"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+            </div>
+            <div class="length d-flex flex-column align-items-center">
+                <p id="session-label" class="mb-0">Session length</p>
+                <div>
+                    <span id="session-decrement"><i class="fa-solid fa-arrow-up"></i></span>
+                    <span id="session-length" class="fs-4">25</span>
+                    <span id="session-increment"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+
+</html>
