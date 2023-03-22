@@ -1,0 +1,45 @@
+:root {
+    --black:            #121416ff;
+    --lighterblack:     rgb(34, 38, 42);
+    --gray:             rgb(101, 102, 107);
+    --lightgreen:       #a5ff8eff;
+    --white:            #f5f5f5ff;
+    --faded-green:      #ceffc2ff;
+    --red:              rgb(141, 48, 48);
+    --blue:             rgb(65, 88, 170);
+}
+
+/* font-family: 'Righteous', cursive; */
+/* font-family: 'Roboto Mono', monospace; */
+
+body {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+    font-family: 'Roboto Mono', monospace !important;
+}
+
+.container {
+    
+}
+
+#title {
+    border-bottom: 2px solid var(--white);
+}
+
+.length {
+
+}
+
+#timer-wrapper {
+    border: 2px solid var(--white);
+    border-radius: 10px;
+}
+
+i {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+i:hover {
+    color: var(--lightgreen);
+}
