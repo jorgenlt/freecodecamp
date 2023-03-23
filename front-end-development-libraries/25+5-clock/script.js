@@ -68,6 +68,7 @@ const start = () => {
         case 'default':
             console.log('case default');
             timerStatus = 'started';
+            sessionLengthInSeconds = sessionLength.innerHTML * 60;
             timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
             timer.startTimer();
             break;
