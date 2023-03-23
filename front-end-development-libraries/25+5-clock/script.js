@@ -15,13 +15,13 @@ const secondsToMinutes = (seconds) => {
 };
 
 // variables
-let sessionLengthInSeconds = 10;
+let sessionLengthInSeconds = 25 * 60;
 let pauseTime;
 let timerStatus = 'default';
 
 // let timerDurationInSeconds = sessionLengthInSeconds;
 let uniqueTimerContainerClassName = "timer-container";
-let originalTextInContainer = '00:00';
+let originalTextInContainer = '';
 let timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
 
 
@@ -38,6 +38,12 @@ const sessionLength = document.querySelector('#session-length');
 const sessionDecrementBtn = document.querySelector('#session-decrement');
 
 // functions
+const timerZero = () => {
+    timeLeft.innerHTML = '00:00';
+    document.getElementById('beep').play();
+    start();
+};
+
 const reset = () => {
     timerStatus = 'reset';
     timer.endTimer();
@@ -99,6 +105,7 @@ const start = () => {
         case 'break':
             console.log('case break');
             timerLabel.innerHTML = 'Break';
+            timeLeft.innerHTML = `${breakLength.innerHTML}:00`
             sessionLengthInSeconds = breakLength.innerHTML * 60;
             timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
             timer.startTimer();
@@ -126,7 +133,7 @@ const start = () => {
             console.log('case started');
             let pausedTime = timeLeft.innerHTML;
             if(pausedTime == '00:00') {
-                document.getElementById('beep').play();
+                // document.getElementById('beep').play();
                 timerStatus = 'break';
                 start();
             } else {
@@ -154,10 +161,12 @@ breakDecrementBtn.addEventListener('click', (event) => {
 });
 sessionIncrementBtn.addEventListener('click', (event) => {
     increment(sessionLength);
+    timeLeft.innerHTML = `${sessionLength.innerHTML}:00`
 });
 sessionLength.addEventListener('click', event => event);
 sessionDecrementBtn.addEventListener('click', (event) => {
     decrement(sessionLength);
+    timeLeft.innerHTML = `${sessionLength.innerHTML}:00`
 });
 timeLeft.addEventListener('DOMSubtreeModified', (event) => {
 
