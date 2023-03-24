@@ -1,19 +1,3 @@
-const secondsToMinutes = (seconds) => {
-    let total_seconds = parseInt(seconds);
-    let minute = Math.floor(total_seconds/60);
-    let remaining_seconds = total_seconds % 60;
-
-    if (Math.ceil(Math.log10(minute + 1)) == 1 || (minute == 0)) {
-        minute = `0${minute}`;
-    };
-
-    if (Math.ceil(Math.log10(remaining_seconds + 1)) == 1 || (remaining_seconds == 0)) {
-        remaining_seconds = `0${remaining_seconds}`;
-    };
-
-    return `${minute}:${remaining_seconds}`;
-};
-
 // variables
 let sessionLengthInSeconds = 25 * 60;
 let pauseTime;
@@ -43,6 +27,8 @@ const timerZero = () => {
     document.getElementById('beep').play();
     start();
 };
+
+const secondsToMinutes = seconds => new Date(90 * 1000).toISOString().substring(14, 19);
 
 const reset = () => {
     timerStatus = 'reset';
