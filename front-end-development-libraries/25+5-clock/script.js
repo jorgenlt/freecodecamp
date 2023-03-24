@@ -1,12 +1,13 @@
 // variables
-let sessionLengthInSeconds = 25 * 60;
-let pauseTime;
+// let sessionLengthInSeconds = 25 * 60;
+// let pauseTime;
 let timerStatus = 'default';
+let timerStatusAtPause = '';
 
-// let timerDurationInSeconds = sessionLengthInSeconds;
-let uniqueTimerContainerClassName = "timer-container";
-let originalTextInContainer = '';
-let timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
+// // let timerDurationInSeconds = sessionLengthInSeconds;
+// let uniqueTimerContainerClassName = "timer-container";
+// let originalTextInContainer = '';
+// let timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
 
 
 // elements
@@ -20,26 +21,106 @@ const breakDecrementBtn = document.querySelector('#break-decrement');
 const sessionIncrementBtn = document.querySelector('#session-increment');
 const sessionLength = document.querySelector('#session-length');
 const sessionDecrementBtn = document.querySelector('#session-decrement');
+const sound = document.querySelector('#beep');
 
 // functions
-const timerZero = () => {
-    timeLeft.innerHTML = '00:00';
-    document.getElementById('beep').play();
-    start();
+const playSound = () => sound.play();
+
+let isPaused = false;
+
+const timer = (countdownTime) => {
+    countdownTime = countdownTime - 1;
+    // countdownTime = countdownTime;
+    const t = () => {
+        if(timerStatus === 'default') {
+        console.log('timer was reset');
+        clearInterval(x);
+        countdownTime = 25 * 60;
+        };
+
+        if(!isPaused) {
+            const minutes = Math.floor((countdownTime) / 60);
+            const seconds = countdownTime % 60; 
+        
+            // Display the remaining time in mm:ss format
+            timeLeft.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        
+            // If the countdown is over, display "EXPIRED" and stop the timer
+            if (countdownTime == 0) {
+                clearInterval(x);
+                playSound();
+                timerEnded();
+            } else {
+            countdownTime--; // Decrement the countdown time by 1 second
+            console.log(`countdownTime: ${countdownTime}`);
+            console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+            };
+        };
+    };
+
+    t();
+    
+    let x = setInterval(() => {
+        t();
+    }, 1000);
 };
 
-const secondsToMinutes = seconds => new Date(90 * 1000).toISOString().substring(14, 19);
+const pause = () => {
+    isPaused = true;
+    timerStatusAtPause = timerStatus;
+    timerStatus = 'paused'
+    console.log('paused');
+};
+
+const resume = () => {
+    isPaused = false;
+    timerStatus = timerStatusAtPause;
+    console.log('started');
+}
+
+const timerEnded = () => {
+    console.log('timer ended');
+    switch (timerStatus) {
+        case 'started':
+            timerStatus = 'break'
+            start();
+        break;
+        case 'break':
+            timerStatus = 'default';
+            start();
+        default:
+    };
+};
+
+const start = () => {
+    switch (timerStatus) {
+        case 'default':
+            // from 'default' status timer is starting and changing status to 'started'
+            console.log('default');
+            const timeLengthSession = sessionLength.innerHTML * 60;
+            timerStatus = 'started';
+            timer(timeLengthSession);
+            console.log('session started');
+        break;
+        case 'break':
+            // with status 'break' the break session is started, 
+            console.log('break');
+            const timeLengthBreak = breakLength.innerHTML * 60;
+            timerLabel.innerHTML = 'Break';
+            timer(timeLengthBreak);
+        default:
+            console.log('error');
+    };
+};
 
 const reset = () => {
-    timerStatus = 'reset';
-    timer.endTimer();
-    sessionLengthInSeconds = 25 * 60;
+    timerStatus = 'default';
     breakLength.innerHTML = 5;
     sessionLength.innerHTML = 25;
     timeLeft.innerHTML = '25:00';
     timerLabel.innerHTML = 'Session';
-    document.getElementById('beep').pause();
-    document.getElementById('beep').currentTime = 0;
+    sound.pause();
+    sound.currentTime = 0;
 };
 
 const increment = (element) => {
@@ -54,90 +135,16 @@ const decrement = (element) => {
     };
 };
 
-const start = () => {
-    console.log('start executed');
-    switch (timerStatus) {
-        case 'default':
-            console.log('case default');
-            timerStatus = 'started';
-            sessionLengthInSeconds = sessionLength.innerHTML * 60;
-            timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-            timer.startTimer();
-            break;
-        case 'reset':
-            console.log('case reset');
-            timerStatus = 'default';
-            break;
-        case 'pause':
-            console.log('case pause');
-            timerStatus = 'paused';
-            break;
-        case 'pauseBreak':
-            console.log('case pauseBreak');
-            timerStatus = 'pausedBreak';
-            break;
-        case 'paused':
-            console.log('case paused');
-            timerStatus = 'started';
-            timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-            timer.startTimer();
-            break;
-        case 'pausedBreak':
-            console.log('case pausedBreak');
-            timerStatus = 'newSession';
-            timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-            timer.startTimer();
-            break;
-        case 'break':
-            console.log('case break');
-            timerLabel.innerHTML = 'Break';
-            timeLeft.innerHTML = `${breakLength.innerHTML}:00`
-            sessionLengthInSeconds = breakLength.innerHTML * 60;
-            timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-            timer.startTimer();
-            timerStatus = 'newSession'
-            break;
-        case 'newSession':
-            console.log('case newSession');
-            let pausedTime2 = timeLeft.innerHTML;
-            if(pausedTime2 == '00:00') {
-                timerStatus = 'started';
-                timerLabel.innerHTML = 'Session';
-                sessionLengthInSeconds = sessionLength.innerHTML * 60;
-                timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-                timer.startTimer();
-            } else {
-                timerStatus = 'pauseBreak';
-                timer.endTimer();
-                timeLeft.innerHTML = pausedTime2;
-                let newSessionTime2 = pausedTime2.split(':');
-                sessionLengthInSeconds = parseInt(newSessionTime2[0]) * 60 + parseInt(newSessionTime2[1]);
-                originalTextInContainer = pausedTime2;
-            };
-            break;
-        case 'started':
-            console.log('case started');
-            let pausedTime = timeLeft.innerHTML;
-            if(pausedTime == '00:00') {
-                // document.getElementById('beep').play();
-                timerStatus = 'break';
-                start();
-            } else {
-                timerStatus = 'pause';
-                timer.endTimer();
-                timeLeft.innerHTML = pausedTime;
-                let newSessionTime = pausedTime.split(':');
-                sessionLengthInSeconds = parseInt(newSessionTime[0]) * 60 + parseInt(newSessionTime[1]);
-                originalTextInContainer = pausedTime;
-            };
-            break;
-        default:
-            console.log('case default');
-    };
-};
-
 // event listeners
-startStopBtn.addEventListener('click', event => start());
+startStopBtn.addEventListener('click', event => {
+    if(timerStatus === 'paused') {
+        resume();
+    } else if(timerStatus === 'started') {
+        pause();
+    } else {
+        start();
+    };
+});
 resetBtn.addEventListener('click', event => reset());
 breakIncrementBtn.addEventListener('click', (event) => {
     increment(breakLength);
@@ -147,56 +154,10 @@ breakDecrementBtn.addEventListener('click', (event) => {
 });
 sessionIncrementBtn.addEventListener('click', (event) => {
     increment(sessionLength);
-    timeLeft.innerHTML = `${sessionLength.innerHTML}:00`
+    timeLeft.innerHTML = (sessionLength.innerHTML < 10 ? "0" : "") + sessionLength.innerHTML + ':00';
 });
 sessionLength.addEventListener('click', event => event);
 sessionDecrementBtn.addEventListener('click', (event) => {
     decrement(sessionLength);
-    timeLeft.innerHTML = `${sessionLength.innerHTML}:00`
-});
-timeLeft.addEventListener('DOMSubtreeModified', (event) => {
-
-    // if(timer['_timeLeft'] == 0){
-    //     switch (timerStatus) {
-    //         case 'started':
-    //             document.getElementById('beep').play();
-    //             timerStatus = 'break';
-    //             start();
-    //             break;
-    //         default:
-    //             timerStatus = 'started';
-    //             timerLabel.innerHTML = 'Session';
-    //             sessionLengthInSeconds = sessionLength.innerHTML * 60;
-    //             timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-    //             timer.startTimer();
-    //     };
-    // };
-    
-    // if(timer['_timeLeft'] == 0) {
-    //     console.log('timer is 0');
-    // }
-    
-    
-    
-    
-    // if(timeLeft.innerHTML == '00:00') {
-        // setTimeout(() => { 
-        //     timer.endTimer();
-        //     timeLeft.innerHTML = '00:00';
-            
-        //     switch (timerStatus) {
-        //         case 'started':
-        //             document.getElementById('beep').play();
-        //             timerStatus = 'break';
-        //             timerLabel.innerHTML = 'Break';
-        //             sessionLengthInSeconds = breakLength.innerHTML * 60;
-        //             // originalTextInContainer = secondsToMinutes(sessionLengthInSeconds);
-        //             timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer)
-        //             timer.startTimer();
-        //             break;
-        //         default:
-        //             start();
-        //     };
-        // }, 1000);
-    // };
+    timeLeft.innerHTML = (sessionLength.innerHTML < 10 ? "0" : "") + sessionLength.innerHTML + ':00';
 });
