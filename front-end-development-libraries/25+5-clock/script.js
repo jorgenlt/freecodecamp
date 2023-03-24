@@ -21,7 +21,7 @@ const breakDecrementBtn = document.querySelector('#break-decrement');
 const sessionIncrementBtn = document.querySelector('#session-increment');
 const sessionLength = document.querySelector('#session-length');
 const sessionDecrementBtn = document.querySelector('#session-decrement');
-const sound = document.querySelector('#sound');
+const sound = document.querySelector('#beep');
 
 // functions
 const playSound = () => sound.play();
@@ -29,13 +29,13 @@ const playSound = () => sound.play();
 let isPaused = false;
 
 const timer = (countdownTime) => {
-    // countdownTime = countdownTime - 1;
     countdownTime = countdownTime - 1;
-    let x = setInterval(() => {
+    // countdownTime = countdownTime;
+    const t = () => {
         if(timerStatus === 'default') {
-            console.log('timer was reset');
-            clearInterval(x);
-            countdownTime = 25 * 60;
+        console.log('timer was reset');
+        clearInterval(x);
+        countdownTime = 25 * 60;
         };
 
         if(!isPaused) {
@@ -46,7 +46,7 @@ const timer = (countdownTime) => {
             timeLeft.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
         
             // If the countdown is over, display "EXPIRED" and stop the timer
-            if (countdownTime === 0) {
+            if (countdownTime == 0) {
                 clearInterval(x);
                 playSound();
                 timerEnded();
@@ -56,7 +56,12 @@ const timer = (countdownTime) => {
             console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
             };
         };
+    };
 
+    t();
+    
+    let x = setInterval(() => {
+        t();
     }, 1000);
 };
 
@@ -64,11 +69,13 @@ const pause = () => {
     isPaused = true;
     timerStatusAtPause = timerStatus;
     timerStatus = 'paused'
+    console.log('paused');
 };
 
 const resume = () => {
     isPaused = false;
     timerStatus = timerStatusAtPause;
+    console.log('started');
 }
 
 const timerEnded = () => {
@@ -88,17 +95,19 @@ const timerEnded = () => {
 const start = () => {
     switch (timerStatus) {
         case 'default':
+            // from 'default' status timer is starting and changing status to 'started'
             console.log('default');
             const timeLengthSession = sessionLength.innerHTML * 60;
             timerStatus = 'started';
             timer(timeLengthSession);
+            console.log('session started');
         break;
         case 'break':
+            // with status 'break' the break session is started, 
             console.log('break');
             const timeLengthBreak = breakLength.innerHTML * 60;
-            timerStatus = 'started';
-            timer(timeLengthBreak);
             timerLabel.innerHTML = 'Break';
+            timer(timeLengthBreak);
         default:
             console.log('error');
     };
