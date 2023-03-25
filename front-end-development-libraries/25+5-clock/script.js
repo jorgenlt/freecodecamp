@@ -29,33 +29,32 @@ const playSound = () => sound.play();
 let isPaused = false;
 
 const timer = (countdownTime) => {
-    countdownTime = countdownTime - 1;
+    // console.log(`countdownTime: ${countdownTime}`);
+    // countdownTime = countdownTime - 1;
     // countdownTime = countdownTime;
     const t = () => {
-        if(timerStatus === 'default') {
-        console.log('timer was reset');
-        clearInterval(x);
-        countdownTime = 25 * 60;
-        };
-
-        if(!isPaused) {
+            // If the countdown is over, display "EXPIRED" and stop the timer
+        if (countdownTime == 0) {
+            console.log(`countdownTime: ${countdownTime}`);
+            playSound();
+            timerEnded();
+            clearInterval(x);
+            console.log('interval cleared');
+        } else if(!isPaused) {
             const minutes = Math.floor((countdownTime) / 60);
             const seconds = countdownTime % 60; 
         
             // Display the remaining time in mm:ss format
             timeLeft.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-        
-            // If the countdown is over, display "EXPIRED" and stop the timer
-            if (countdownTime == 0) {
-                clearInterval(x);
-                playSound();
-                timerEnded();
-            } else {
-            countdownTime--; // Decrement the countdown time by 1 second
             console.log(`countdownTime: ${countdownTime}`);
+            countdownTime--; // Decrement the countdown time by 1 second
             console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
-            };
         };
+
+
+
+        // const minutes = Math.floor((countdownTime) / 60);
+        // const seconds = countdownTime % 60; 
     };
 
     t();
@@ -63,6 +62,13 @@ const timer = (countdownTime) => {
     let x = setInterval(() => {
         t();
     }, 1000);
+
+    if(timerStatus === 'reset') {
+        console.log('timer was reset');
+        clearInterval(x);
+        countdownTime = 25 * 60;
+        timerStatus = 'default';
+    };
 };
 
 const pause = () => {
@@ -80,6 +86,8 @@ const resume = () => {
 
 const timerEnded = () => {
     console.log('timer ended');
+    // timeLeft.innerHTML = '00:00';
+    console.log(`timeLeft.innerHTML: ${timeLeft.innerHTML}`);
     switch (timerStatus) {
         case 'started':
             timerStatus = 'break'
@@ -97,6 +105,7 @@ const start = () => {
         case 'default':
             // from 'default' status timer is starting and changing status to 'started'
             console.log('default');
+            timerLabel.innerHTML = 'Session';
             const timeLengthSession = sessionLength.innerHTML * 60;
             timerStatus = 'started';
             timer(timeLengthSession);
@@ -114,13 +123,15 @@ const start = () => {
 };
 
 const reset = () => {
-    timerStatus = 'default';
+    console.log('reset');
+    timerStatus = 'reset';
     breakLength.innerHTML = 5;
     sessionLength.innerHTML = 25;
     timeLeft.innerHTML = '25:00';
     timerLabel.innerHTML = 'Session';
     sound.pause();
     sound.currentTime = 0;
+    timer(sessionLength.innerHTML * 60);
 };
 
 const increment = (element) => {
