@@ -1,4 +1,8 @@
 :root {
+    --light-hue: 150deg;
+    --light-saturation: 0%;
+    --light-power: 80%;
+    
     --black:            #121416ff;
     --lighterblack:     rgb(34, 38, 42);
     --gray:             rgb(101, 102, 107);
@@ -12,24 +16,32 @@
 /* font-family: 'Righteous', cursive; */
 /* font-family: 'Roboto Mono', monospace; */
 
+/* Watch from https://codepen.io/equinusocio/pen/PoNYGGX */
+
 body {
     background-color: var(--black) !important;
     color: var(--white) !important;
     font-family: 'Roboto Mono', monospace !important;
 }
 
-#title {
-    border-bottom: 2px solid var(--white);
-}
-
 #timer-wrapper {
-    border: 2px solid var(--white);
-    border-radius: 10px;
     width: 200px;
 }
 
+#timer-wrapper i {
+    font-size: 30px;
+}
+
+#timer-label {
+    text-transform: uppercase;
+}
+
+#time-left {
+    font-size: 55px;
+}
+
 i {
-    font-size: 20px;
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -39,4 +51,290 @@ i:hover {
 
 .lightgreen {
     color: var(--lightgreen);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 240px;
+    position: absolute; 
+    z-index: 99;
+}
+
+/* watch */
+.watch {
+    --dimmer: clamp(10%, var(--light-power), 40%);
+    --light: var(--light-hue) calc(var(--light-saturation) - 40%) calc(var(--light-power) + 35%); 
+    --light-dimmed: var(--light-hue) calc(var(--light-saturation) - 90%) var(--dimmer); 
+    --light-dark: var(--light-hue) var(--light-saturation) calc(var(--light-power) / 10); 
+    
+    filter: drop-shadow(0 10px 50px hsla(0deg, 0%, 0%, 0.6));
+}
+
+
+/* strap */
+.strap {
+    position: relative;
+    background: 
+    linear-gradient(
+    to bottom,
+    hsla(210, 10%, 8%, 1),
+    hsl(var(--light) / 15%)
+    ),
+    hsl(var(--light-dark));
+    height: 150px;
+    width: 70%;
+    margin: 0 auto;
+    z-index: -2;
+    border-radius: 50% 50% 0% 0% / 30% 30% 0 0 
+    
+    /* Reflect stripe */
+}
+
+.strap[reflect="true"] {
+    transform: scaleY(-1);
+}
+
+.strap {
+    /* All straps */
+}
+.strap::before,
+.strap::after {
+    display: block;
+    background: inherit;
+    background-size: 100% 200%;
+    background-position: 0 100%;
+    position: absolute;
+    bottom: 10px;
+    width: 40px;
+    height: 80px;
+    z-index: -1;
+    transform: translateY(5px);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-position: 0 24px;
+    mask-position: 0 24px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+.strap {
+    
+    /* Top strap */
+}
+.strap::before {
+    right: 99.5%;
+    -webkit-mask-image: radial-gradient(
+    ellipse farthest-corner at left top,
+    transparent 70%,
+    black 70.5%
+    );
+    mask-image: radial-gradient(
+    ellipse farthest-corner at left top,
+    transparent 70%,
+    black 70.5%
+    );
+}
+.strap {  
+    
+    /* Bottom strap */
+}
+.strap::after {
+    left: 99.5%;
+    -webkit-mask-image: radial-gradient(
+    ellipse farthest-corner at right top,
+    transparent 70%,
+    black 70.5%
+    );
+    mask-image: radial-gradient(
+    ellipse farthest-corner at right top,
+    transparent 70%,
+    black 70.5%
+    );
+}
+
+
+/* screen */
+.screen {  
+    --sub-reflection: var(--light-hue) calc(var(--light-saturation) / 5) 60%;
+    --screen-color: hsl(var(--light-hue) clamp(0%, var(--light-saturation), 40%) 2%);
+    
+    position: relative;
+    background-color: var(--screen-color);
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    width: 300px;
+    height: 350px;
+    border: 2px solid #000;
+    border-radius: 21% 21% 21% 21% / 20% 20% 20% 20%;
+    background-position: center center;
+    background-size: 200%;  
+    box-shadow:
+    25px 0 10px -20px hsl(var(--light) / 60%),
+    -25px 0 10px -20px hsl(var(--light) / 60%),
+    0 20px 10px -20px hsl(var(--light) / 60%),
+    0 -20px 10px -20px hsl(var(--light) / 60%),
+    inset 0 125px 3px -125px white,
+    inset 0 -125px 3px -125px white,
+    inset 125px 0 3px -125px white,
+    inset -125px 0 3px -125px white,
+    inset 0 50px 5px -50px hsl(var(--light)),
+    inset 0 -50px 5px -50px hsl(var(--light)),
+    inset 50px 0 5px -50px hsl(var(--light)),
+    inset -50px 0 5px -50px hsl(var(--light)),
+    inset 0 50px 15px -50px hsl(var(--light)),
+    inset 0 -50px 15px -50px hsl(var(--light)),
+    inset 50px 0 15px -50px hsl(var(--light)),
+    inset -50px 0 15px -50px hsl(var(--light))
+    
+    /* External frame */
+}
+.screen::before {
+    position: absolute;
+    box-shadow:
+    inset 0 3px 7px -4px hsl(0deg, 0%, 0%),
+    inset 0 -3px 7px -4px hsl(0deg, 0%, 0%),
+    inset 0 0 7px 6px hsl(var(--light-dark))
+    ;
+    left: -5%;
+    right: -5%;
+    top: -4%;
+    bottom: -4%;
+    z-index: -1;
+    border-radius: 23% 23% 23% 23% / 22% 22% 22% 22%;
+    background: 
+    repeating-conic-gradient(
+    transparent 0%,
+    hsla(0deg, 0%, 0%, 0.6) 10%,
+    hsla(0deg, 0%, 0%, 0.6) 14%,
+    transparent 19%,
+    transparent 26%,
+    hsla(0deg, 0%, 0%, 0.6) 25%
+    ),
+    hsl(var(--light-dimmed));
+}
+
+.screen {    
+    /* screen mask */
+}
+
+.screen::after {
+    position: absolute;
+    top: 7%;
+    bottom: 2%;
+    left: 5%;
+    right: 5%;
+    border-radius: 15% 15% 23% 23%;
+    background:
+    linear-gradient(
+    to right,
+    hsl(var(--light-dimmed) / 20%),
+    transparent 40%
+    ),
+    var(--screen-color)
+    ;
+    filter: blur(1px);
+}
+
+/* Digital crown */
+.crown {
+    position: absolute;
+    top: 60px;
+    left: 103%;
+    width: 20px;
+    height: 70px;
+    border-radius: 20% 20% 20% 20% / 30% 30% 30% 30%;
+    box-shadow:
+    -5px 0 3px -1px black,
+    -1px 0 1px -2px hsl(0deg 0% 0% / 60%),
+    -5px 0 5px -10px hsl(var(--light-dark)),
+    inset 1px 0 6px 2px hsl(var(--light) / 10%),
+    inset 2px 0 6px 5px hsl(0deg 0% 0% / 80%),
+    inset -2px 0 2px hsl(var(--light-dark) / 70%);
+    background:
+    linear-gradient(
+    to right,
+    hsl(var(--light-dark) / 50%) 10%,
+    transparent 40% 70%,
+    hsl(var(--light-dimmed) / 60%) 90%
+    ),
+    repeating-linear-gradient(
+    transparent 2% 5%,
+    hsl(var(--light-dark) / 50%) 5.1% 9%,
+    hsl(var(--light)) 9.1% 9.5%,
+    transparent 9.6%
+    ),
+    linear-gradient(
+    to bottom,
+    hsl(var(--light)),
+    hsl(var(--light) / 30%),
+    hsl(var(--light) / 10%),
+    hsl(var(--light-dark))
+    ),
+    hsl(var(--light-dimmed));
+}
+
+/* Home button */
+.button {
+    width: 5px;
+    height: 90px;
+    position: absolute;
+    left: calc(100% + 5%);
+    transform: translateX(-100%);
+    bottom: 20%;
+    border-radius: 100% 0% 0% 100% / 50% 50% 50% 50%;
+    box-shadow:
+    inset -8px 0 0 -5px hsl(var(--light-dark) / 70%),
+    -1px 0 0 1px hsl(var(--light-dark))
+    ;
+    background-image: linear-gradient(
+    to bottom,
+    hsl(var(--light-dimmed)) 5%,
+    hsl(var(--light-dark)) 10%, hsl(var(--light-dark)) 15%,
+    hsl(var(--light) / 60%) 20%, hsl(var(--light)/60%) 70%,
+    hsl(var(--light-dark)) 85%, hsl(var(--light-dark)) 90%,
+    hsl(var(--light-dimmed))
+    );
+}
+
+
+@keyframes color {
+    0% {
+        --light-hue: 260deg;
+        --light-saturation: 100%;
+        --light-power: 80%;
+    }
+    20% {
+        --light-hue: 360deg;
+        --light-saturation: 100%;
+        --light-power: 50%;
+    }
+    40% {
+        --light-hue: 160deg;
+        --light-saturation: 100%;
+        --light-power: 80%;
+    }
+    60% {
+        --light-hue: 160deg;
+        --light-saturation: 0%;
+        --light-power: 0%;
+    }
+    80% {
+        --light-hue: 260deg;
+        --light-saturation: 100%;
+        --light-power: 80%;
+    }
+    100% {
+        --light-hue: 200deg;
+        --light-saturation: 0%;
+        --light-power: 100%;
+    }
+}
+
+*::before,
+*::after {
+    content: '';
 }
