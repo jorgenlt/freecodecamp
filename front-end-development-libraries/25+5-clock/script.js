@@ -1,8 +1,7 @@
 // variables
-// let sessionLengthInSeconds = 25 * 60;
-// let pauseTime;
 let timerStatus = 'default';
 let timerStatusAtPause = '';
+let isPaused = false;
 
 // // let timerDurationInSeconds = sessionLengthInSeconds;
 // let uniqueTimerContainerClassName = "timer-container";
@@ -24,22 +23,17 @@ const sessionDecrementBtn = document.querySelector('#session-decrement');
 const sound = document.querySelector('#beep');
 
 // functions
-const playSound = () => sound.play();
-
-let isPaused = false;
-
 const timer = (countdownTime) => {
     // console.log(`countdownTime: ${countdownTime}`);
     // countdownTime = countdownTime - 1;
-    // countdownTime = countdownTime;
     const t = () => {
             // If the countdown is over, display "EXPIRED" and stop the timer
-        if (countdownTime == 0) {
+        if (countdownTime == - 1) {
             console.log(`countdownTime: ${countdownTime}`);
+            // timeLeft.innerHTML = '00:00';
             playSound();
             timerEnded();
             clearInterval(x);
-            console.log('interval cleared');
         } else if(!isPaused) {
             const minutes = Math.floor((countdownTime) / 60);
             const seconds = countdownTime % 60; 
@@ -47,28 +41,24 @@ const timer = (countdownTime) => {
             // Display the remaining time in mm:ss format
             timeLeft.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
             console.log(`countdownTime: ${countdownTime}`);
-            countdownTime--; // Decrement the countdown time by 1 second
-            console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+            
+            // Decrement the countdown time by 1 second
+            countdownTime--;
+
+            // console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
         };
-
-
-
-        // const minutes = Math.floor((countdownTime) / 60);
-        // const seconds = countdownTime % 60; 
     };
 
     t();
     
     let x = setInterval(() => {
-        t();
+        if(timerStatus === 'reset') {
+            console.log('timer was reset');
+            clearInterval(x);
+        } else {
+            t();
+        };
     }, 1000);
-
-    if(timerStatus === 'reset') {
-        console.log('timer was reset');
-        clearInterval(x);
-        countdownTime = 25 * 60;
-        timerStatus = 'default';
-    };
 };
 
 const pause = () => {
@@ -79,9 +69,9 @@ const pause = () => {
 };
 
 const resume = () => {
-    isPaused = false;
     timerStatus = timerStatusAtPause;
-    console.log('started');
+    isPaused = false;
+    console.log('resumed');
 }
 
 const timerEnded = () => {
@@ -102,6 +92,10 @@ const timerEnded = () => {
 
 const start = () => {
     switch (timerStatus) {
+        case 'reset':
+            timerStatus = 'default';
+            start();
+        break;
         case 'default':
             // from 'default' status timer is starting and changing status to 'started'
             console.log('default');
@@ -109,7 +103,7 @@ const start = () => {
             const timeLengthSession = sessionLength.innerHTML * 60;
             timerStatus = 'started';
             timer(timeLengthSession);
-            console.log('session started');
+            console.log('timer started from default');
         break;
         case 'break':
             // with status 'break' the break session is started, 
@@ -117,12 +111,17 @@ const start = () => {
             const timeLengthBreak = breakLength.innerHTML * 60;
             timerLabel.innerHTML = 'Break';
             timer(timeLengthBreak);
+        break;
         default:
             console.log('error');
     };
 };
 
 const reset = () => {
+    if(timerStatus === 'paused') {
+        isPaused = false;
+    };
+    
     console.log('reset');
     timerStatus = 'reset';
     breakLength.innerHTML = 5;
@@ -131,7 +130,10 @@ const reset = () => {
     timerLabel.innerHTML = 'Session';
     sound.pause();
     sound.currentTime = 0;
+
+
     timer(sessionLength.innerHTML * 60);
+    // timerStatus = 'default';
 };
 
 const increment = (element) => {
@@ -146,11 +148,13 @@ const decrement = (element) => {
     };
 };
 
+const playSound = () => sound.play();
+
 // event listeners
 startStopBtn.addEventListener('click', event => {
     if(timerStatus === 'paused') {
         resume();
-    } else if(timerStatus === 'started') {
+    } else if(timerStatus === 'started' || timerStatus === 'break') {
         pause();
     } else {
         start();
