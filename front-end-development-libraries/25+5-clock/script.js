@@ -1,60 +1,48 @@
 // variables
-let timerStatus = 'default';
-let timerStatusAtPause = '';
-let isPaused = false;
-
-// // let timerDurationInSeconds = sessionLengthInSeconds;
-// let uniqueTimerContainerClassName = "timer-container";
-// let originalTextInContainer = '';
-// let timer = new SimpleTimer(sessionLengthInSeconds, uniqueTimerContainerClassName, originalTextInContainer);
-
+let timerStatus         = 'default';
+let timerStatusAtPause  = '';
+let isPaused            = false;
 
 // elements
-const timerLabel = document.querySelector('#timer-label');
-const timeLeft = document.querySelector('#time-left');
-const startStopBtn = document.querySelector('#start_stop');
-const resetBtn = document.querySelector('#reset');
-const breakIncrementBtn = document.querySelector('#break-increment');
-const breakLength = document.querySelector('#break-length');
-const breakDecrementBtn = document.querySelector('#break-decrement');
-const sessionIncrementBtn = document.querySelector('#session-increment');
-const sessionLength = document.querySelector('#session-length');
-const sessionDecrementBtn = document.querySelector('#session-decrement');
-const sound = document.querySelector('#beep');
+const timerLabel            = document.querySelector('#timer-label');
+const timeLeft              = document.querySelector('#time-left');
+const startStopBtn          = document.querySelector('#start_stop');
+const resetBtn              = document.querySelector('#reset');
+const breakIncrementBtn     = document.querySelector('#break-increment');
+const breakLength           = document.querySelector('#break-length');
+const breakDecrementBtn     = document.querySelector('#break-decrement');
+const sessionIncrementBtn   = document.querySelector('#session-increment');
+const sessionLength         = document.querySelector('#session-length');
+const sessionDecrementBtn   = document.querySelector('#session-decrement');
+const sound                 = document.querySelector('#beep');
 
 // functions
 const timer = (countdownTime) => {
-    // console.log(`countdownTime: ${countdownTime}`);
-    // countdownTime = countdownTime - 1;
     const t = () => {
-            // If the countdown is over, display "EXPIRED" and stop the timer
+            // timer is 00:00 when countdownTime = - 1
         if (countdownTime == - 1) {
-            console.log(`countdownTime: ${countdownTime}`);
-            // timeLeft.innerHTML = '00:00';
             playSound();
             timerEnded();
-            clearInterval(x);
+            clearInterval(interval);
         } else if(!isPaused) {
             const minutes = Math.floor((countdownTime) / 60);
             const seconds = countdownTime % 60; 
         
-            // Display the remaining time in mm:ss format
+            // display the remaining time in mm:ss format
             timeLeft.innerHTML = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-            console.log(`countdownTime: ${countdownTime}`);
             
-            // Decrement the countdown time by 1 second
+            // decrement the countdown time by 1 second
             countdownTime--;
-
-            // console.log((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
         };
     };
 
+    // execute timer function once before start of interval
     t();
-    
-    let x = setInterval(() => {
+
+    let interval = setInterval(() => {
         if(timerStatus === 'reset') {
             console.log('timer was reset');
-            clearInterval(x);
+            clearInterval(interval);
         } else {
             t();
         };
@@ -62,22 +50,22 @@ const timer = (countdownTime) => {
 };
 
 const pause = () => {
+    timeLeft.classList.remove('lightgreen')
     isPaused = true;
     timerStatusAtPause = timerStatus;
-    timerStatus = 'paused'
+    timerStatus = 'paused';
     console.log('paused');
 };
 
 const resume = () => {
+    timeLeft.classList.add('lightgreen')
     timerStatus = timerStatusAtPause;
     isPaused = false;
     console.log('resumed');
-}
+};
 
 const timerEnded = () => {
-    console.log('timer ended');
-    // timeLeft.innerHTML = '00:00';
-    console.log(`timeLeft.innerHTML: ${timeLeft.innerHTML}`);
+    console.log(`timer ended at -> timeLeft.innerHTML: ${timeLeft.innerHTML}`);
     switch (timerStatus) {
         case 'started':
             timerStatus = 'break'
@@ -91,6 +79,8 @@ const timerEnded = () => {
 };
 
 const start = () => {
+    timeLeft.classList.add('lightgreen');
+
     switch (timerStatus) {
         case 'reset':
             timerStatus = 'default';
@@ -122,6 +112,7 @@ const reset = () => {
         isPaused = false;
     };
     
+    timeLeft.classList.remove('lightgreen');
     console.log('reset');
     timerStatus = 'reset';
     breakLength.innerHTML = 5;
@@ -130,10 +121,7 @@ const reset = () => {
     timerLabel.innerHTML = 'Session';
     sound.pause();
     sound.currentTime = 0;
-
-
     timer(sessionLength.innerHTML * 60);
-    // timerStatus = 'default';
 };
 
 const increment = (element) => {
@@ -151,7 +139,7 @@ const decrement = (element) => {
 const playSound = () => sound.play();
 
 // event listeners
-startStopBtn.addEventListener('click', event => {
+startStopBtn.addEventListener('click', () => {
     if(timerStatus === 'paused') {
         resume();
     } else if(timerStatus === 'started' || timerStatus === 'break') {
@@ -160,19 +148,19 @@ startStopBtn.addEventListener('click', event => {
         start();
     };
 });
-resetBtn.addEventListener('click', event => reset());
-breakIncrementBtn.addEventListener('click', (event) => {
-    increment(breakLength);
-});
-breakDecrementBtn.addEventListener('click', (event) => {
-    decrement(breakLength);
-});
-sessionIncrementBtn.addEventListener('click', (event) => {
+
+resetBtn.addEventListener('click', () => reset());
+
+breakIncrementBtn.addEventListener('click', () => increment(breakLength));
+
+breakDecrementBtn.addEventListener('click', () => decrement(breakLength));
+
+sessionIncrementBtn.addEventListener('click', () => {
     increment(sessionLength);
     timeLeft.innerHTML = (sessionLength.innerHTML < 10 ? "0" : "") + sessionLength.innerHTML + ':00';
 });
-sessionLength.addEventListener('click', event => event);
-sessionDecrementBtn.addEventListener('click', (event) => {
+
+sessionDecrementBtn.addEventListener('click', () => {
     decrement(sessionLength);
     timeLeft.innerHTML = (sessionLength.innerHTML < 10 ? "0" : "") + sessionLength.innerHTML + ':00';
 });
