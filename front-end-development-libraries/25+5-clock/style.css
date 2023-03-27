@@ -40,6 +40,10 @@ body {
     font-size: 55px;
 }
 
+#break-label, #session-label {
+    text-transform: uppercase;
+}
+
 i {
     font-size: 12px;
     cursor: pointer;
