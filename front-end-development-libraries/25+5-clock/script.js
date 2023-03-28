@@ -75,6 +75,7 @@ const timerEnded = () => {
             timerStatus = 'default';
             start();
         default:
+        break;
     };
 };
 

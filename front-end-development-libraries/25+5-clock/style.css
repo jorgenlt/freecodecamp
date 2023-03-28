@@ -24,6 +24,11 @@ body {
     font-family: 'Roboto Mono', monospace !important;
 }
 
+#title {
+    margin-bottom: 100px;
+    text-transform: uppercase;
+}
+
 #timer-wrapper {
     width: 200px;
 }
